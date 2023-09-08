@@ -10,14 +10,14 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export type ActionType = "Melee Attack" | "Ranged Attack" | "Spell Cast";
+export type ActionType = "Melee Attack" | "Ranged Attack" | "Spell Cast" | "Knowledge Check";
 
 interface DropDownProps {
   action: ActionType;
   setAction: (action: ActionType) => void;
 }
 
-let actions: ActionType[] = ["Melee Attack", "Ranged Attack", "Spell Cast"];
+let actions: ActionType[] = ["Melee Attack", "Ranged Attack", "Spell Cast", "Knowledge Check"];
 
 export default function DropDown({ action, setAction }: DropDownProps) {
   return (

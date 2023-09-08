@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useRef, useState } from 'react';
+import { useRef, useState, ChangeEvent } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 import DropDown, { ActionType } from '../components/DropDown';
 import Footer from '../components/Footer';
@@ -10,7 +10,7 @@ import Header from '../components/Header';
 import { useChat } from 'ai/react';
 
 export default function Page() {
-  const [flav, setFlav] = useState('');
+  const flav = useRef<string | null>(null);
   const [action, setAction] = useState<ActionType>('Melee Attack');
   const flavRef = useRef<null | HTMLDivElement>(null);
 
@@ -24,7 +24,7 @@ export default function Page() {
     useChat({
       body: {
         action,
-        flav,
+        flav: flav.current,
       },
       onResponse() {
         scrollToFlavs();
@@ -32,8 +32,12 @@ export default function Page() {
     });
 
   const onSubmit = (e: any) => {
-    setFlav(input);
     handleSubmit(e);
+  };
+
+  const handleInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    flav.current = e.target.value;
+		handleInputChange(e);
   };
 
   const lastMessage = messages[messages.length - 1];
@@ -66,20 +70,20 @@ export default function Page() {
               className="mb-5 sm:mb-0"
             />
             <p className="text-left font-medium">
-              Tell me exactly what you were trying to do!{' '}
+              What was the character trying to do!{' '}
               <span className="text-slate-500">
-                (not currently implemented)
+                (Please follow the prose in the example given)
               </span>
               .
             </p>
           </div>
           <textarea
             value={input}
-            onChange={handleInputChange}
+            onChange={handleInput}
             rows={4}
             className="w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black my-5"
             placeholder={
-              'e.g. Durdle the Harengon attempts to stab the gnoll with a long pointed rapier'
+              'Durdle the Harengon attempts to stab the gnoll with a long pointed rapier'
             }
           />
           <div className="flex mb-5 items-center space-x-3">
@@ -129,25 +133,18 @@ export default function Page() {
                 </h2>
               </div>
               <div className="space-y-8 flex flex-col items-center justify-center max-w-xl mx-auto">
-                {generatedFlavs
-                  .substring(generatedFlavs.indexOf('1') + 3)
-                  .split('2.')
-                  .map((generatedFlav) => {
-                    return (
-                      <div
+              <div
                         className="bg-white rounded-xl shadow-md p-4 hover:bg-gray-100 transition cursor-copy border"
                         onClick={() => {
-                          navigator.clipboard.writeText(generatedFlav);
+                          navigator.clipboard.writeText(generatedFlavs);
                           toast('Fumble copied to clipboard', {
                             icon: '✂️',
                           });
                         }}
-                        key={generatedFlav}
+                        key={generatedFlavs}
                       >
-                        <p>{generatedFlav}</p>
+                        <p>{generatedFlavs}</p>
                       </div>
-                    );
-                  })}
               </div>
             </>
           )}
