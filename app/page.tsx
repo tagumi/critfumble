@@ -3,41 +3,41 @@
 import Image from 'next/image';
 import { useRef, useState } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
-import DropDown, { VibeType } from '../components/DropDown';
+import DropDown, { ActionType } from '../components/DropDown';
 import Footer from '../components/Footer';
 import Github from '../components/GitHub';
 import Header from '../components/Header';
 import { useChat } from 'ai/react';
 
 export default function Page() {
-  const [bio, setBio] = useState('');
-  const [vibe, setVibe] = useState<VibeType>('Professional');
-  const bioRef = useRef<null | HTMLDivElement>(null);
+  const [flav, setFlav] = useState('');
+  const [action, setAction] = useState<ActionType>('Melee Attack');
+  const flavRef = useRef<null | HTMLDivElement>(null);
 
-  const scrollToBios = () => {
-    if (bioRef.current !== null) {
-      bioRef.current.scrollIntoView({ behavior: 'smooth' });
+  const scrollToFlavs = () => {
+    if (flavRef.current !== null) {
+      flavRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   const { input, handleInputChange, handleSubmit, isLoading, messages } =
     useChat({
       body: {
-        vibe,
-        bio,
+        action,
+        flav,
       },
       onResponse() {
-        scrollToBios();
+        scrollToFlavs();
       },
     });
 
   const onSubmit = (e: any) => {
-    setBio(input);
+    setFlav(input);
     handleSubmit(e);
   };
 
   const lastMessage = messages[messages.length - 1];
-  const generatedBios = lastMessage?.role === "assistant" ? lastMessage.content : null;
+  const generatedFlavs = lastMessage?.role === "assistant" ? lastMessage.content : null;
 
   return (
     <div className="flex max-w-5xl mx-auto flex-col items-center justify-center py-2 min-h-screen">
@@ -87,7 +87,7 @@ export default function Page() {
             <p className="text-left font-medium">Select your action.</p>
           </div>
           <div className="block">
-            <DropDown vibe={vibe} setVibe={(newVibe) => setVibe(newVibe)} />
+            <DropDown action={action} setAction={(newAction) => setAction(newAction)} />
           </div>
 
           {!isLoading && (
@@ -118,33 +118,33 @@ export default function Page() {
         />
         <hr className="h-px bg-gray-700 border-1 dark:bg-gray-700" />
         <output className="space-y-10 my-10">
-          {generatedBios && (
+          {generatedFlavs && (
             <>
               <div>
                 <h2
                   className="sm:text-4xl text-3xl font-bold text-slate-900 mx-auto"
-                  ref={bioRef}
+                  ref={flavRef}
                 >
-                  Your generated bios
+                  Your generated fumble
                 </h2>
               </div>
               <div className="space-y-8 flex flex-col items-center justify-center max-w-xl mx-auto">
-                {generatedBios
-                  .substring(generatedBios.indexOf('1') + 3)
+                {generatedFlavs
+                  .substring(generatedFlavs.indexOf('1') + 3)
                   .split('2.')
-                  .map((generatedBio) => {
+                  .map((generatedFlav) => {
                     return (
                       <div
                         className="bg-white rounded-xl shadow-md p-4 hover:bg-gray-100 transition cursor-copy border"
                         onClick={() => {
-                          navigator.clipboard.writeText(generatedBio);
-                          toast('Bio copied to clipboard', {
+                          navigator.clipboard.writeText(generatedFlav);
+                          toast('Fumble copied to clipboard', {
                             icon: '✂️',
                           });
                         }}
-                        key={generatedBio}
+                        key={generatedFlav}
                       >
-                        <p>{generatedBio}</p>
+                        <p>{generatedFlav}</p>
                       </div>
                     );
                   })}
