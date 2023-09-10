@@ -20,10 +20,10 @@ export async function POST(req: Request) {
     messages: [
       {
         role: 'user',
-        content: `Generate a descriptions of a dnd5e character critically failing to perform a ${action} as if they had rolled a natural 1 in the game."
-        Make sure both description is less than 250 characters, is slightly comedic, is very embarassing, and is based on this intended action: ${flav}${
+        content: `You are a DM in a dnd5e campaign. Describe what happens to a player character critically failing to perform a ${action} as if they had rolled a natural 1 in the game."
+        Make sure the description is less than 250 characters, is slightly comedic, is very embarassing, and is based on this intended action: ${flav}${
           flav.slice(-1) === '.' ? '' : '.'
-        } After the description, add a sentence to describing how its outcome affects the character in the game negatively, as oulined in the rules of dnd5e.`
+        } After the description, add a sentence to describing how its outcome affects the character in the game negatively, as outlined in the rules of dnd5e.`
       },
     ],
   });
